@@ -11,6 +11,8 @@ class AppTheme {
   static const Color errorRed = Color(0xFFEF4444);
   static const Color successGreen = Color(0xFF10B981);
 
+  static const double horizontalPadding = 20.0;
+
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
@@ -19,7 +21,6 @@ class AppTheme {
         primary: primaryBlue,
         secondary: accentGold,
         surface: Colors.white,
-        background: backgroundSlate,
         error: errorRed,
       ),
       scaffoldBackgroundColor: backgroundSlate,
@@ -74,11 +75,11 @@ class AppTheme {
         contentPadding: const EdgeInsets.all(16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Colors.slate.shade200),
+          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Colors.slate.shade200),
+          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -87,7 +88,7 @@ class AppTheme {
         labelStyle: const TextStyle(color: textLight),
         hintStyle: const TextStyle(color: Color(0xFF94A3B8)),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: Colors.white,
         elevation: 2,
         shadowColor: Colors.black.withOpacity(0.05),

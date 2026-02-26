@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
-import '../../../core/theme/app_theme.dart';
-import '../providers/parcel_form_provider.dart';
-import '../widgets/step_location.dart';
-import '../widgets/step_details.dart';
-import '../widgets/step_owner.dart';
-import '../widgets/step_residents.dart';
-import '../widgets/step_uploads.dart';
-import '../widgets/step_summary.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:parcello_mobile/core/theme/app_theme.dart';
+import 'package:parcello_mobile/features/parcels/providers/parcel_form_provider.dart';
+import 'package:parcello_mobile/features/parcels/widgets/step_location.dart';
+import 'package:parcello_mobile/features/parcels/widgets/step_details.dart';
+import 'package:parcello_mobile/features/parcels/widgets/step_owner.dart';
+import 'package:parcello_mobile/features/parcels/widgets/step_residents.dart';
+import 'package:parcello_mobile/features/parcels/widgets/step_uploads.dart';
+import 'package:parcello_mobile/features/parcels/widgets/step_summary.dart';
+import 'package:parcello_mobile/features/dashboard/providers/stats_repository.dart';
 
 class NewParcelScreen extends ConsumerStatefulWidget {
   const NewParcelScreen({super.key});
@@ -49,25 +50,41 @@ class _NewParcelScreenState extends ConsumerState<NewParcelScreen> {
     }
   }
 
-  void _handleSubmit() {
-    // Show success dialog
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Succès'),
-        content: const Text('La fiche de recensement a été transmise avec succès.'),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              ref.read(parcelFormProvider.notifier).reset();
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-            },
-            child: const Text('Ok'),
-          ),
-        ],
-      ),
-    );
+  Future<void> _handleSubmit() async {
+    final success = await ref.read(parcelFormProvider.notifier).submit();
+    
+    if (!mounted) return;
+
+    final state = ref.read(parcelFormProvider);
+    
+    if (success) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          title: const Text('Succès'),
+          content: Text(state.error ?? 'La fiche de recensement a été transmise avec succès.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                ref.read(parcelFormProvider.notifier).reset();
+                Navigator.of(context).pop(); // Pop dialog
+                Navigator.of(context).pop(); // Pop screen
+                ref.refresh(statsProvider); // Refresh dashboard stats
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(state.error ?? 'Une erreur est survenue lors de l\'envoi.'),
+          backgroundColor: AppTheme.errorRed,
+        ),
+      );
+    }
   }
 
   void _back() {
@@ -83,13 +100,14 @@ class _NewParcelScreenState extends ConsumerState<NewParcelScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentStep = ref.watch(parcelFormProvider).currentStep;
+    final formState = ref.watch(parcelFormProvider);
+    final currentStep = formState.currentStep;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nouveau Recensement'),
         leading: IconButton(
-          icon: const Icon(LucideIcons.x),
+          icon: Icon(LucideIcons.x),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -112,7 +130,7 @@ class _NewParcelScreenState extends ConsumerState<NewParcelScreen> {
             ),
           ),
           // Bottom Navigation
-          _buildBottomNav(currentStep),
+          _buildBottomNav(currentStep, formState.isSubmitting),
         ],
       ),
     );
@@ -136,14 +154,14 @@ class _NewParcelScreenState extends ConsumerState<NewParcelScreen> {
                       width: 24,
                       height: 24,
                       decoration: BoxDecoration(
-                        color: isCurrent ? AppTheme.accentGold : (isActive ? AppTheme.primaryBlue : Colors.slate.shade200),
+                        color: isCurrent ? AppTheme.accentGold : (isActive ? AppTheme.primaryBlue : const Color(0xFFE2E8F0)),
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: Text(
                           '${index + 1}',
                           style: TextStyle(
-                            color: isActive ? Colors.white : Colors.slate.shade500,
+                            color: isActive ? Colors.white : const Color(0xFF64748B),
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -154,7 +172,7 @@ class _NewParcelScreenState extends ConsumerState<NewParcelScreen> {
                       Expanded(
                         child: Container(
                           height: 2,
-                          color: index < current ? AppTheme.primaryBlue : Colors.slate.shade200,
+                          color: index < current ? AppTheme.primaryBlue : const Color(0xFFE2E8F0),
                         ),
                       ),
                   ],
@@ -172,7 +190,7 @@ class _NewParcelScreenState extends ConsumerState<NewParcelScreen> {
     );
   }
 
-  Widget _buildBottomNav(int current) {
+  Widget _buildBottomNav(int current, bool isSubmitting) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -190,7 +208,7 @@ class _NewParcelScreenState extends ConsumerState<NewParcelScreen> {
           if (current > 0) ...[
             Expanded(
               child: OutlinedButton(
-                onPressed: _back,
+                onPressed: isSubmitting ? null : _back,
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(0, 56),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -203,16 +221,14 @@ class _NewParcelScreenState extends ConsumerState<NewParcelScreen> {
           Expanded(
             flex: 2,
             child: ElevatedButton(
-              onPressed: _next,
-              child: Text(current == _stepTitles.length - 1 ? 'Terminer' : 'Continuer'),
+              onPressed: isSubmitting ? null : _next,
+              child: isSubmitting 
+                  ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                  : Text(current == _stepTitles.length - 1 ? 'Terminer' : 'Continuer'),
             ),
           ),
         ],
       ),
     );
-  }
-
-  Widget _buildPlaceholderStep(String title) {
-    return Center(child: Text(title));
   }
 }

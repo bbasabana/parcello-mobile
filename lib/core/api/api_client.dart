@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../constants/app_constants.dart';
 
@@ -8,7 +9,7 @@ class ApiClient {
 
   ApiClient()
       : _dio = Dio(BaseOptions(
-          baseUrl: AppConstants.baseUrl,
+          baseUrl: AppConstants.apiUrl,
           connectTimeout: const Duration(seconds: 15),
           receiveTimeout: const Duration(seconds: 15),
           headers: {
@@ -38,3 +39,5 @@ class ApiClient {
 
   Dio get dio => _dio;
 }
+
+final apiClientProvider = Provider((ref) => ApiClient());

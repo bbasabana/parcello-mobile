@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
-import '../../../core/theme/app_theme.dart';
-import '../providers/auth_provider.dart';
-import '../../dashboard/screens/dashboard_screen.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:parcello_mobile/core/theme/app_theme.dart';
+import 'package:parcello_mobile/features/auth/providers/auth_provider.dart';
+import 'package:parcello_mobile/features/dashboard/screens/dashboard_screen.dart';
 
 class TotpScreen extends ConsumerStatefulWidget {
   const TotpScreen({super.key});
@@ -37,7 +37,7 @@ class _TotpScreenState extends ConsumerState<TotpScreen> {
       appBar: AppBar(
         title: const Text('Sécurité 2FA'),
         leading: IconButton(
-          icon: const Icon(LucideIcons.arrowLeft),
+          icon: Icon(LucideIcons.arrowLeft),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -52,7 +52,7 @@ class _TotpScreenState extends ConsumerState<TotpScreen> {
                 color: AppTheme.primaryBlue.withOpacity(0.05),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 LucideIcons.shieldCheck,
                 size: 64,
                 color: AppTheme.primaryBlue,
@@ -79,7 +79,7 @@ class _TotpScreenState extends ConsumerState<TotpScreen> {
                 decoration: BoxDecoration(
                   color: AppTheme.backgroundSlate,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.slate.shade200),
+                  border: Border.all(color: const Color(0xFFE2E8F0)),
                 ),
                 child: Column(
                   children: [
@@ -114,7 +114,7 @@ class _TotpScreenState extends ConsumerState<TotpScreen> {
                 hintText: '000000',
                 counterText: '',
                 enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.slate.shade200, width: 2),
+                  borderSide: BorderSide(color: const Color(0xFFE2E8F0), width: 2),
                 ),
                 focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppTheme.primaryBlue, width: 3),

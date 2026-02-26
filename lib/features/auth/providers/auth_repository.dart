@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import '../../core/api/api_client.dart';
-import '../../core/constants/app_constants.dart';
-import '../../../models/user_model.dart';
+import 'package:parcello_mobile/core/api/api_client.dart';
+import 'package:parcello_mobile/core/constants/app_constants.dart';
+import 'package:parcello_mobile/models/user_model.dart';
 
 class AuthRepository {
   final ApiClient _apiClient;
@@ -16,16 +16,32 @@ class AuthRepository {
       );
       
       final data = response.data;
+      if (data == null || data is! Map<String, dynamic>) {
+        return AuthResult(
+          success: false, 
+          message: 'Format de réponse invalide du serveur.'
+        );
+      }
+
       return AuthResult(
         success: true,
-        requiresSetup: data['requiresSetup'] ?? false,
-        totpSecret: data['totpSecret'],
-        message: data['message'],
+        requiresSetup: data['requiresSetup'] == true,
+        totpSecret: data['totpSecret']?.toString(),
+        message: data['message']?.toString(),
       );
     } on DioException catch (e) {
+      final errorData = e.response?.data;
+      String message = 'Erreur de connexion (${e.type})';
+      if (errorData is Map<String, dynamic>) {
+        message = errorData['error'] ?? errorData['message'] ?? message;
+      } else if (errorData is String && errorData.isNotEmpty) {
+        message = errorData;
+      }
+      return AuthResult(success: false, message: message);
+    } catch (e) {
       return AuthResult(
         success: false,
-        message: e.response?.data['error'] ?? 'Erreur de connexion',
+        message: 'Une erreur inattendue est survenue: $e',
       );
     }
   }
@@ -38,15 +54,29 @@ class AuthRepository {
       );
       
       final data = response.data;
+      if (data == null || data is! Map<String, dynamic>) {
+        return AuthVerifyResult(
+          success: false, 
+          message: 'Format de réponse invalide lors de la vérification.'
+        );
+      }
+
       return AuthVerifyResult(
         success: true,
-        token: data['token'],
-        user: UserModel.fromJson(data['user']),
+        token: data['token']?.toString(),
+        user: data['user'] != null ? UserModel.fromJson(data['user']) : null,
       );
     } on DioException catch (e) {
+      final errorData = e.response?.data;
+      String message = 'Code invalide';
+      if (errorData is Map<String, dynamic>) {
+        message = errorData['error'] ?? errorData['message'] ?? message;
+      }
+      return AuthVerifyResult(success: false, message: message);
+    } catch (e) {
       return AuthVerifyResult(
         success: false,
-        message: e.response?.data['error'] ?? 'Code invalide',
+        message: 'Erreur de vérification: $e',
       );
     }
   }

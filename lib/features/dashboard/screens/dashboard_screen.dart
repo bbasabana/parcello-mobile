@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
-import '../../../core/theme/app_theme.dart';
-import '../providers/auth_provider.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:parcello_mobile/core/theme/app_theme.dart';
+import 'package:parcello_mobile/features/auth/providers/auth_provider.dart';
+import 'package:parcello_mobile/features/auth/screens/login_screen.dart';
+import 'package:parcello_mobile/features/parcels/screens/new_parcel_screen.dart';
+import 'package:parcello_mobile/features/dashboard/providers/stats_repository.dart';
+import 'package:parcello_mobile/features/parcels/providers/parcel_form_provider.dart';
+import 'package:parcello_mobile/core/api/api_client.dart';
+import 'package:parcello_mobile/models/stats_model.dart';
+
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -15,39 +22,60 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authStateProvider).user;
+    final statsAsync = ref.watch(statsProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Parcello'),
+        title: Row(
+          children: [
+            Image.asset('assets/logos/armorie.png', height: 36),
+            const SizedBox(width: 12),
+            const Text('Parcello', style: TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
         actions: [
           IconButton(
-            icon: const Icon(LucideIcons.bell, size: 20),
+            icon: Icon(LucideIcons.bell, size: 20),
             onPressed: () {},
           ),
           const SizedBox(width: 8),
         ],
       ),
       drawer: _buildDrawer(context),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppTheme.horizontalPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildWelcomeHeader(user),
-            const SizedBox(height: 24),
-            Text(
-              'Vue d\'ensemble',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 16),
-            _buildStatsGrid(),
-            const SizedBox(height: 32),
-            _buildRecentActivityHeader(),
-            const SizedBox(height: 16),
-            _buildRecentParcelsList(),
-          ],
+      body: RefreshIndicator(
+        onRefresh: () => ref.refresh(statsProvider.future),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppTheme.horizontalPadding),
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildWelcomeHeader(user),
+              const SizedBox(height: 24),
+              Text(
+                'Vue d\'ensemble',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 16),
+              statsAsync.when(
+                data: (stats) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildStatsGrid(stats),
+                    const SizedBox(height: 32),
+                    _buildRecentActivityHeader(),
+                    const SizedBox(height: 16),
+                    _buildRecentParcelsList(stats.recentParcels),
+                  ],
+                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, _) => Center(child: Text('Erreur: $err')),
+              ),
+            ],
+          ),
         ),
       ),
+
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.of(context).push(
@@ -56,7 +84,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         },
         backgroundColor: AppTheme.primaryBlue,
         foregroundColor: Colors.white,
-        icon: const Icon(LucideIcons.plus),
+        icon: Icon(LucideIcons.plus),
         label: const Text('Nouvelle Parcelle'),
       ),
     );
@@ -81,7 +109,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildStatsGrid() {
+  Widget _buildStatsGrid(DashboardStats stats) {
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -90,9 +118,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       crossAxisSpacing: 16,
       childAspectRatio: 1.1,
       children: [
-        _buildStatCard('Parcelles', '248', LucideIcons.building2, Colors.blue),
-        _buildStatCard('Propriétaires', '192', LucideIcons.user, Colors.orange),
-        _buildStatCard('Résidents', '1.2k', LucideIcons.users, Colors.green),
+        _buildStatCard('Parcelles', stats.totalParcels.toString(), LucideIcons.building2, Colors.blue),
+        _buildStatCard('Propriétaires', stats.totalOwners.toString(), LucideIcons.user, Colors.orange),
+        _buildStatCard('Résidents', stats.totalResidents.toString(), LucideIcons.users, Colors.green),
         _buildStatCard('Recensement', '85%', LucideIcons.barChart3, Colors.purple),
       ],
     );
@@ -142,7 +170,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildRecentActivityHeader() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.between,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           'Dernières fiches',
@@ -156,34 +184,60 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildRecentParcelsList() {
+  Widget _buildRecentParcelsList(List<dynamic> recentParcels) {
+    if (recentParcels.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(24.0),
+          child: Text('Aucune activité récente', style: TextStyle(color: Colors.grey)),
+        ),
+      );
+    }
+
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: 3,
+      itemCount: recentParcels.length,
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
+        final parcel = recentParcels[index];
+        final ownerName = parcel['owner'] != null ? parcel['owner']['fullName'] : 'Inconnu';
+        
+        // Define status color and label
+        Color statusColor = Colors.grey;
+        String statusLabel = 'Inconnu';
+        if (parcel['status'] == 'APPROVED') {
+          statusColor = Colors.green;
+          statusLabel = 'Approuvé';
+        } else if (parcel['status'] == 'PENDING') {
+          statusColor = Colors.orange;
+          statusLabel = 'En attente';
+        } else if (parcel['status'] == 'REJECTED') {
+          statusColor = Colors.red;
+          statusLabel = 'Rejeté';
+        }
+
         return Card(
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             leading: CircleAvatar(
-              backgroundColor: AppTheme.backgroundSlate,
-              child: const Icon(LucideIcons.mapPin, color: AppTheme.primaryBlue, size: 20),
+              backgroundColor: const Color(0xFFF8FAFC),
+              child: Icon(LucideIcons.mapPin, color: AppTheme.primaryBlue, size: 20),
             ),
             title: Text(
-              index == 0 ? 'Av. des Aviateurs, 45' : index == 1 ? 'Av. Lukusa, 12' : 'Av. de la Justice, 8',
+              ownerName,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: const Text('Quartier Gombe • Il y a 2h'),
+            subtitle: Text('${parcel['commune']} • ${parcel['quarter']}'),
             trailing: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, py: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
+                color: statusColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: const Text(
-                'Validé',
-                style: TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold),
+              child: Text(
+                statusLabel,
+                style: TextStyle(color: statusColor, fontSize: 10, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -243,4 +297,3 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 }
-import 'login_screen.dart'; // Added for logout navigation

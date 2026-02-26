@@ -5,7 +5,6 @@ import '../../../core/constants/app_constants.dart';
 import '../../../models/user_model.dart';
 import 'auth_repository.dart';
 
-final apiClientProvider = Provider((ref) => ApiClient());
 
 final authRepositoryProvider = Provider((ref) {
   final apiClient = ref.watch(apiClientProvider);
@@ -68,20 +67,24 @@ class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier(this._repository) : super(AuthState());
 
   Future<void> login(String identifier) async {
-    state = state.copyWith(isLoading: true, error: null);
-    
-    final result = await _repository.login(identifier);
-    
-    if (result.success) {
-      state = state.copyWith(
-        isLoading: false,
-        requires2FA: true,
-        requiresSetup: result.requiresSetup,
-        totpSecret: result.totpSecret,
-        identifier: identifier,
-      );
-    } else {
-      state = state.copyWith(isLoading: false, error: result.message);
+    try {
+      state = state.copyWith(isLoading: true, error: null);
+      
+      final result = await _repository.login(identifier);
+      
+      if (result.success) {
+        state = state.copyWith(
+          isLoading: false,
+          requires2FA: true,
+          requiresSetup: result.requiresSetup,
+          totpSecret: result.totpSecret,
+          identifier: identifier,
+        );
+      } else {
+        state = state.copyWith(isLoading: false, error: result.message);
+      }
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: 'Une erreur critique est survenue: $e');
     }
   }
 

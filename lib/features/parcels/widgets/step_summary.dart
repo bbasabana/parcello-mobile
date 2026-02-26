@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/parcel_form_provider.dart';
 
@@ -37,10 +37,15 @@ class StepSummary extends ConsumerWidget {
             'Nom: ${state.ownerData['lastName'] ?? '-'} ${state.ownerData['firstName'] ?? '-'}',
             'Pièce ID: ${state.ownerData['idCardNumber'] ?? '-'}',
           ]),
-          const SizedBox(height: 24),
           _buildSection('Contenu', [
             'Unités: ${state.apartments.length}',
             'Total Résidents: ${state.apartments.fold(0, (sum, apt) => sum + apt.residents.length)}',
+          ]),
+          const SizedBox(height: 24),
+          _buildSection('Documents joints', [
+            'Photo Parcelle: ${state.mapPhoto != null ? 'Oui' : 'Non'}',
+            'Photo Propriétaire: ${state.parcelPhoto != null ? 'Oui' : 'Non'}',
+            'Pièce d\'identité: ${state.passportPhoto != null ? 'Oui' : 'Non'}',
           ]),
           const SizedBox(height: 40),
           Container(
@@ -49,11 +54,11 @@ class StepSummary extends ConsumerWidget {
               color: AppTheme.primaryBlue.withOpacity(0.05),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Row(
+            child: Row(
               children: [
                 Icon(LucideIcons.info, color: AppTheme.primaryBlue, size: 20),
                 const SizedBox(width: 12),
-                Expanded(
+                const Expanded(
                   child: Text(
                     'En cliquant sur "Terminer", les données seront transmises au serveur.',
                     style: TextStyle(fontSize: 13, color: AppTheme.primaryBlue),

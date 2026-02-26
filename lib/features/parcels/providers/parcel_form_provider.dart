@@ -1,4 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:parcello_mobile/core/database/database_helper.dart';
+import 'package:parcello_mobile/core/api/api_client.dart';
+import 'package:parcello_mobile/features/auth/providers/auth_provider.dart';
 
 class Resident {
   String firstName;
@@ -16,6 +20,15 @@ class Resident {
     required this.role,
     this.photo,
   });
+
+  Map<String, dynamic> toJson() => {
+    'firstName': firstName,
+    'lastName': lastName,
+    'postName': postName,
+    'sex': sex,
+    'role': role,
+    'photo': photo,
+  };
 }
 
 class Apartment {
@@ -28,6 +41,12 @@ class Apartment {
     required this.type,
     this.residents = const [],
   });
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'type': type,
+    'residents': residents.map((r) => r.toJson()).toList(),
+  };
 }
 
 class ParcelFormState {
@@ -42,7 +61,11 @@ class ParcelFormState {
   final double? area;
   final Map<String, dynamic> ownerData;
   final List<Apartment> apartments;
-  final List<String> photos;
+  final String? mapPhoto;
+  final String? parcelPhoto;
+  final String? passportPhoto;
+  final bool isSubmitting;
+  final String? error;
 
   ParcelFormState({
     this.currentStep = 0,
@@ -56,7 +79,11 @@ class ParcelFormState {
     this.area,
     this.ownerData = const {},
     this.apartments = const [],
-    this.photos = const [],
+    this.mapPhoto,
+    this.parcelPhoto,
+    this.passportPhoto,
+    this.isSubmitting = false,
+    this.error,
   });
 
   ParcelFormState copyWith({
@@ -71,7 +98,11 @@ class ParcelFormState {
     double? area,
     Map<String, dynamic>? ownerData,
     List<Apartment>? apartments,
-    List<String>? photos,
+    String? mapPhoto,
+    String? parcelPhoto,
+    String? passportPhoto,
+    bool? isSubmitting,
+    String? error,
   }) {
     return ParcelFormState(
       currentStep: currentStep ?? this.currentStep,
@@ -85,28 +116,67 @@ class ParcelFormState {
       area: area ?? this.area,
       ownerData: ownerData ?? this.ownerData,
       apartments: apartments ?? this.apartments,
-      photos: photos ?? this.photos,
+      mapPhoto: mapPhoto ?? this.mapPhoto,
+      parcelPhoto: parcelPhoto ?? this.parcelPhoto,
+      passportPhoto: passportPhoto ?? this.passportPhoto,
+      isSubmitting: isSubmitting ?? this.isSubmitting,
+      error: error ?? this.error,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'commune': commune,
+    'quarter': quarter,
+    'address': address,
+    'latitude': latitude,
+    'longitude': longitude,
+    'type': type,
+    'mixedTypes': mixedTypes,
+    'area': area,
+    'ownerData': ownerData,
+    'apartments': apartments.map((a) => a.toJson()).toList(),
+    'mapPhoto': mapPhoto,
+    'parcelPhoto': parcelPhoto,
+    'passportPhoto': passportPhoto,
+  };
 }
 
 class ParcelFormNotifier extends StateNotifier<ParcelFormState> {
-  ParcelFormNotifier() : super(ParcelFormState());
+  final Ref _ref;
+
+  ParcelFormNotifier(this._ref) : super(ParcelFormState());
 
   void updateLocation({String? commune, String? quarter, String? address, double? lat, double? lng}) {
     state = state.copyWith(
-      commune: commune,
-      quarter: quarter,
-      address: address,
-      latitude: lat,
-      longitude: lng,
+      commune: commune ?? state.commune,
+      quarter: quarter ?? state.quarter,
+      address: address ?? state.address,
+      latitude: lat ?? state.latitude,
+      longitude: lng ?? state.longitude,
     );
   }
 
   void nextStep() => state = state.copyWith(currentStep: state.currentStep + 1);
   void prevStep() => state = state.copyWith(currentStep: state.currentStep - 1);
   
-  void setType(String type) => state = state.copyWith(type: type);
+  void setType(String type) {
+    if (type == 'MIXED') {
+      state = state.copyWith(type: type);
+    } else {
+      state = state.copyWith(type: type, mixedTypes: []); 
+    }
+  }
+
+  void toggleMixedType(String type) {
+    final current = List<String>.from(state.mixedTypes);
+    if (current.contains(type)) {
+      current.remove(type);
+    } else {
+      current.add(type);
+    }
+    state = state.copyWith(mixedTypes: current);
+  }
+
   
   void updateOwner(Map<String, dynamic> data) {
     state = state.copyWith(ownerData: {...state.ownerData, ...data});
@@ -145,9 +215,49 @@ class ParcelFormNotifier extends StateNotifier<ParcelFormState> {
     state = state.copyWith(apartments: apartments);
   }
 
+  void addPhoto(String type, String path) {
+    if (type == 'mapPhoto') {
+      state = state.copyWith(mapPhoto: path);
+    } else if (type == 'parcelPhoto') {
+      state = state.copyWith(parcelPhoto: path);
+    } else if (type == 'passportPhoto') {
+      state = state.copyWith(passportPhoto: path);
+    }
+  }
+
+  Future<bool> submit() async {
+    state = state.copyWith(isSubmitting: true, error: null);
+    
+    final results = await Connectivity().checkConnectivity();
+    final isOnline = results.any((r) => r != ConnectivityResult.none);
+
+    if (isOnline) {
+      try {
+        final apiClient = _ref.read(apiClientProvider);
+        await apiClient.dio.post('/parcels', data: state.toJson());
+        state = state.copyWith(isSubmitting: false);
+        return true;
+      } catch (e) {
+        print('Server submission failed, saving locally: $e');
+        // fallthrough to offline save
+      }
+    }
+
+    // Offline save
+    try {
+      await DatabaseHelper().insertParcel(state.toJson());
+      state = state.copyWith(isSubmitting: false, error: 'Enregistré localement (hors-ligne)');
+      return true;
+    } catch (e) {
+      state = state.copyWith(isSubmitting: false, error: 'Erreur d\'enregistrement: $e');
+      return false;
+    }
+  }
+
   void reset() => state = ParcelFormState();
 }
 
+
 final parcelFormProvider = StateNotifierProvider<ParcelFormNotifier, ParcelFormState>((ref) {
-  return ParcelFormNotifier();
+  return ParcelFormNotifier(ref);
 });

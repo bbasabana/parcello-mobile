@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/parcel_form_provider.dart';
 
@@ -33,7 +33,7 @@ class StepResidents extends ConsumerWidget {
                 const SizedBox(height: 16),
                 OutlinedButton.icon(
                   onPressed: () => _showAddApartmentDialog(context, ref),
-                  icon: const Icon(LucideIcons.plus),
+                  icon: Icon(LucideIcons.plus),
                   label: const Text('Ajouter une unité'),
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
@@ -52,7 +52,7 @@ class StepResidents extends ConsumerWidget {
       child: Column(
         children: [
           const SizedBox(height: 40),
-          Icon(LucideIcons.home, size: 48, color: Colors.slate.shade300),
+          Icon(LucideIcons.home, size: 48, color: const Color(0xFFCBD5E1)),
           const SizedBox(height: 16),
           const Text('Aucune unité configurée', style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
@@ -60,7 +60,7 @@ class StepResidents extends ConsumerWidget {
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () => _showAddApartmentDialog(ref.context, ref),
-            icon: const Icon(LucideIcons.plus),
+            icon: Icon(LucideIcons.plus),
             label: const Text('Générer les unités'),
           ),
         ],
@@ -78,12 +78,12 @@ class StepResidents extends ConsumerWidget {
             color: AppTheme.primaryBlue.withOpacity(0.05),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: const Icon(LucideIcons.home, color: AppTheme.primaryBlue, size: 20),
+          child: Icon(LucideIcons.home, color: AppTheme.primaryBlue, size: 20),
         ),
         title: Text(apartment.name, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text('${apartment.residents.length} résident(s)'),
         trailing: IconButton(
-          icon: const Icon(LucideIcons.trash2, color: AppTheme.errorRed, size: 20),
+          icon: Icon(LucideIcons.trash2, color: AppTheme.errorRed, size: 20),
           onPressed: () => ref.read(parcelFormProvider.notifier).removeApartment(index),
         ),
         children: [
@@ -95,11 +95,11 @@ class StepResidents extends ConsumerWidget {
                    final resident = resEntry.value;
                    return ListTile(
                      contentPadding: EdgeInsets.zero,
-                     leading: const CircleAvatar(child: Icon(LucideIcons.user, size: 16)),
+                     leading: CircleAvatar(child: Icon(LucideIcons.user, size: 16)),
                      title: Text('${resident.firstName} ${resident.lastName}'),
                      subtitle: Text(resident.role),
                      trailing: IconButton(
-                       icon: const Icon(LucideIcons.minusCircle, color: Colors.slate),
+                       icon: Icon(LucideIcons.minusCircle, color: const Color(0xFF64748B)),
                        onPressed: () => ref.read(parcelFormProvider.notifier).removeResident(index, resEntry.key),
                      ),
                    );
@@ -107,7 +107,7 @@ class StepResidents extends ConsumerWidget {
                 const SizedBox(height: 12),
                 TextButton.icon(
                   onPressed: () => _showAddResidentDialog(context, ref, index),
-                  icon: const Icon(LucideIcons.userPlus, size: 18),
+                  icon: Icon(LucideIcons.userPlus, size: 18),
                   label: const Text('Ajouter un résident'),
                 ),
               ],

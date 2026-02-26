@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/parcel_form_provider.dart';
 
@@ -41,6 +41,45 @@ class StepOwner extends ConsumerWidget {
           const Divider(),
           const SizedBox(height: 24),
           const Text('Pièce d\'identité', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Type de pièce', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: AppTheme.textLight)),
+              const SizedBox(height: 8),
+              DropdownButtonFormField<String>(
+                value: state.ownerData['idCardType'],
+                items: const [
+                  DropdownMenuItem(value: "CARTE D'ÉLECTEUR", child: Text("Carte d'électeur")),
+                  DropdownMenuItem(value: "PASSEPORT", child: Text("Passeport")),
+                  DropdownMenuItem(value: "PERMIS DE CONDUIRE", child: Text("Permis de conduire")),
+                  DropdownMenuItem(value: "CARTE DE LA POLICE", child: Text("Carte de la police")),
+                  DropdownMenuItem(value: "AUTRES", child: Text("Autres")),
+                ],
+                onChanged: (val) {
+                  if (val != null) {
+                    ref.read(parcelFormProvider.notifier).updateOwner({'idCardType': val});
+                  }
+                },
+                decoration: InputDecoration(
+                  hintText: 'Sélectionner le type',
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: AppTheme.primaryBlue, width: 2),
+                  ),
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 16),
           _buildTextField('N° de la pièce', ref, 'idCardNumber'),
           const SizedBox(height: 16),

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "cd.kinshasa.parcello.parcello_mobile"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

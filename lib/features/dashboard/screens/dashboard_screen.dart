@@ -9,6 +9,11 @@ import 'package:parcello_mobile/features/dashboard/providers/stats_repository.da
 import 'package:parcello_mobile/features/parcels/providers/parcel_form_provider.dart';
 import 'package:parcello_mobile/core/api/api_client.dart';
 import 'package:parcello_mobile/models/stats_model.dart';
+import 'package:parcello_mobile/features/parcels/screens/parcels_screen.dart';
+import 'package:parcello_mobile/features/map/screens/map_screen.dart';
+import 'package:parcello_mobile/features/data/screens/data_screen.dart';
+import 'package:parcello_mobile/features/reports/screens/reports_screen.dart';
+import 'package:parcello_mobile/features/settings/screens/settings_screen.dart';
 
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -262,13 +267,28 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             accountName: Text(ref.watch(authStateProvider).user?.name ?? 'Utilisateur'),
             accountEmail: Text(ref.watch(authStateProvider).user?.email ?? ''),
           ),
-          _buildDrawerItem(LucideIcons.layoutDashboard, 'Tableau de bord', true),
-          _buildDrawerItem(LucideIcons.building, 'Mes Parcelles', false),
-          _buildDrawerItem(LucideIcons.map, 'Cartographie', false),
-          _buildDrawerItem(LucideIcons.database, 'MAPA Data', false),
-          _buildDrawerItem(LucideIcons.pieChart, 'Rapports', false),
+          _buildDrawerItem(LucideIcons.layoutDashboard, 'Tableau de bord', true, onTap: () => Navigator.of(context).pop()),
+          _buildDrawerItem(LucideIcons.building, 'Mes Parcelles', false, onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ParcelsScreen()));
+          }),
+          _buildDrawerItem(LucideIcons.map, 'Cartographie', false, onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MapScreen()));
+          }),
+          _buildDrawerItem(LucideIcons.database, 'MAPA Data', false, onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => const DataScreen()));
+          }),
+          _buildDrawerItem(LucideIcons.pieChart, 'Rapports', false, onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReportsScreen()));
+          }),
           const Divider(),
-          _buildDrawerItem(LucideIcons.settings, 'Paramètres', false),
+          _buildDrawerItem(LucideIcons.settings, 'Paramètres', false, onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
+          }),
           const Spacer(),
           _buildDrawerItem(LucideIcons.logOut, 'Déconnexion', false, onTap: () {
             ref.read(authStateProvider.notifier).reset();

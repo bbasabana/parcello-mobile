@@ -1,0 +1,186 @@
+Analyzing mobile...                                             
+
+  error • Undefined class 'StreamSubscription' • lib/core/services/sync_service.dart:10:3 • undefined_class
+  error • Undefined name 'Timer' • lib/core/services/sync_service.dart:26:5 • undefined_identifier
+  error • The method 'jsonDecode' isn't defined for the type 'SyncService' • lib/core/services/sync_service.dart:48:22 • undefined_method
+   info • Don't invoke 'print' in production code • lib/core/services/sync_service.dart:55:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/sync_service.dart:68:7 • avoid_print
+  error • The method 'jsonDecode' isn't defined for the type 'SyncService' • lib/core/services/sync_service.dart:79:20 • undefined_method
+   info • Don't invoke 'print' in production code • lib/core/services/sync_service.dart:84:9 • avoid_print
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/theme/app_theme.dart:95:35 • deprecated_member_use
+   info • 'desiredAccuracy' is deprecated and shouldn't be used. use settings parameter with AndroidSettings, AppleSettings, WebSettings, or LocationSettings • lib/core/utils/location_service.dart:26:7 • deprecated_member_use
+warning • Unused import: 'package:parcello_mobile/core/constants/app_constants.dart' • lib/features/auth/providers/auth_repository.dart:3:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/auth/screens/totp_screen.dart:52:45 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/features/dashboard/providers/stats_repository.dart:25:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/dashboard/providers/stats_repository.dart:28:7 • avoid_print
+warning • Unused import: 'package:parcello_mobile/features/parcels/providers/parcel_form_provider.dart' • lib/features/dashboard/screens/dashboard_screen.dart:9:8 • unused_import
+warning • Unused import: 'package:parcello_mobile/core/api/api_client.dart' • lib/features/dashboard/screens/dashboard_screen.dart:10:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/dashboard/screens/dashboard_screen.dart:145:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/dashboard/screens/dashboard_screen.dart:240:36 • deprecated_member_use
+  error • Undefined class 'Widget' • lib/features/data/screens/data_screen.dart:8:3 • undefined_class
+  error • Undefined class 'BuildContext' • lib/features/data/screens/data_screen.dart:8:16 • undefined_class
+  error • The method 'Scaffold' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:11:12 • undefined_method
+  error • The method 'AppBar' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:12:15 • undefined_method
+  error • The name 'Text' isn't a class • lib/features/data/screens/data_screen.dart:13:22 • creation_with_non_type
+  error • The method 'ListView' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:15:13 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/data/screens/data_screen.dart:16:24 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/data/screens/data_screen.dart:19:17 • creation_with_non_type
+  error • The name 'Text' isn't a class • lib/features/data/screens/data_screen.dart:20:17 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:22:20 • undefined_method
+  error • Undefined name 'FontWeight' • lib/features/data/screens/data_screen.dart:22:56 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/data/screens/data_screen.dart:24:17 • creation_with_non_type
+  error • Undefined name 'LucideIcons' • lib/features/data/screens/data_screen.dart:26:92 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/data/screens/data_screen.dart:26:121 • undefined_identifier
+  error • Undefined name 'LucideIcons' • lib/features/data/screens/data_screen.dart:27:76 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/data/screens/data_screen.dart:27:105 • undefined_identifier
+  error • Undefined name 'LucideIcons' • lib/features/data/screens/data_screen.dart:28:82 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/data/screens/data_screen.dart:28:111 • undefined_identifier
+  error • Undefined name 'LucideIcons' • lib/features/data/screens/data_screen.dart:30:52 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/data/screens/data_screen.dart:30:77 • undefined_identifier
+  error • Undefined name 'LucideIcons' • lib/features/data/screens/data_screen.dart:31:56 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/data/screens/data_screen.dart:31:82 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/data/screens/data_screen.dart:32:17 • creation_with_non_type
+  error • The name 'Text' isn't a class • lib/features/data/screens/data_screen.dart:33:17 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:35:20 • undefined_method
+  error • Undefined name 'FontWeight' • lib/features/data/screens/data_screen.dart:35:56 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/data/screens/data_screen.dart:37:17 • creation_with_non_type
+  error • Undefined name 'LucideIcons' • lib/features/data/screens/data_screen.dart:38:66 • undefined_identifier
+  error • Undefined name 'ScaffoldMessenger' • lib/features/data/screens/data_screen.dart:39:13 • undefined_identifier
+  error • The name 'SnackBar' isn't a class • lib/features/data/screens/data_screen.dart:39:62 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:39:80 • undefined_method
+  error • Undefined name 'LucideIcons' • lib/features/data/screens/data_screen.dart:41:68 • undefined_identifier
+  error • Undefined name 'ScaffoldMessenger' • lib/features/data/screens/data_screen.dart:42:13 • undefined_identifier
+  error • The name 'SnackBar' isn't a class • lib/features/data/screens/data_screen.dart:42:62 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:42:80 • undefined_method
+  error • Undefined name 'LucideIcons' • lib/features/data/screens/data_screen.dart:44:61 • undefined_identifier
+  error • Undefined class 'Widget' • lib/features/data/screens/data_screen.dart:50:3 • undefined_class
+  error • The method 'Container' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:51:12 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/data/screens/data_screen.dart:52:22 • undefined_identifier
+  error • The method 'BoxDecoration' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:53:19 • undefined_method
+  error • The name 'LinearGradient' isn't a class • lib/features/data/screens/data_screen.dart:54:25 • creation_with_non_type
+  error • Undefined name 'AppTheme' • lib/features/data/screens/data_screen.dart:55:20 • undefined_identifier
+  error • The method 'Color' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:55:42 • undefined_method
+  error • Undefined name 'Alignment' • lib/features/data/screens/data_screen.dart:56:18 • undefined_identifier
+  error • Undefined name 'Alignment' • lib/features/data/screens/data_screen.dart:57:16 • undefined_identifier
+  error • Undefined name 'BorderRadius' • lib/features/data/screens/data_screen.dart:59:23 • undefined_identifier
+  error • The name 'Column' isn't a class • lib/features/data/screens/data_screen.dart:61:20 • creation_with_non_type
+  error • Undefined name 'CrossAxisAlignment' • lib/features/data/screens/data_screen.dart:62:29 • undefined_identifier
+  error • The method 'Row' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:64:11 • undefined_method
+  error • The method 'Icon' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:66:15 • undefined_method
+  error • Undefined name 'LucideIcons' • lib/features/data/screens/data_screen.dart:66:20 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/data/screens/data_screen.dart:66:53 • undefined_identifier
+  error • The method 'SizedBox' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:67:15 • undefined_method
+  error • The method 'Text' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:68:15 • undefined_method
+  error • The method 'TextStyle' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:70:24 • undefined_method
+  error • Undefined name 'Colors' • lib/features/data/screens/data_screen.dart:70:41 • undefined_identifier
+  error • Undefined name 'FontWeight' • lib/features/data/screens/data_screen.dart:70:81 • undefined_identifier
+  error • The method 'SizedBox' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:74:11 • undefined_method
+  error • The method 'Text' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:75:11 • undefined_method
+  error • The method 'TextStyle' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:77:20 • undefined_method
+  error • Undefined name 'Colors' • lib/features/data/screens/data_screen.dart:77:37 • undefined_identifier
+  error • Undefined class 'Widget' • lib/features/data/screens/data_screen.dart:84:3 • undefined_class
+  error • Undefined class 'IconData' • lib/features/data/screens/data_screen.dart:84:53 • undefined_class
+  error • Undefined class 'Color' • lib/features/data/screens/data_screen.dart:84:68 • undefined_class
+  error • The method 'Padding' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:85:12 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/data/screens/data_screen.dart:86:22 • undefined_identifier
+  error • The method 'Container' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:87:14 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/data/screens/data_screen.dart:88:24 • undefined_identifier
+  error • The method 'BoxDecoration' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:89:21 • undefined_method
+  error • Undefined name 'Colors' • lib/features/data/screens/data_screen.dart:90:18 • undefined_identifier
+  error • Undefined name 'BorderRadius' • lib/features/data/screens/data_screen.dart:91:25 • undefined_identifier
+  error • Undefined name 'Border' • lib/features/data/screens/data_screen.dart:92:19 • undefined_identifier
+  error • The name 'Color' isn't a class • lib/features/data/screens/data_screen.dart:92:43 • creation_with_non_type
+  error • The method 'Row' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:94:16 • undefined_method
+  error • The method 'Icon' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:96:13 • undefined_method
+  error • The name 'SizedBox' isn't a class • lib/features/data/screens/data_screen.dart:97:19 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:98:13 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/data/screens/data_screen.dart:98:38 • creation_with_non_type
+  error • Undefined name 'FontWeight' • lib/features/data/screens/data_screen.dart:98:60 • undefined_identifier
+  error • The name 'Spacer' isn't a class • lib/features/data/screens/data_screen.dart:99:19 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:100:13 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/data/screens/data_screen.dart:100:38 • creation_with_non_type
+  error • Undefined name 'FontWeight' • lib/features/data/screens/data_screen.dart:100:60 • undefined_identifier
+  error • Undefined name 'AppTheme' • lib/features/data/screens/data_screen.dart:100:84 • undefined_identifier
+  error • Undefined class 'Widget' • lib/features/data/screens/data_screen.dart:107:3 • undefined_class
+  error • Undefined class 'BuildContext' • lib/features/data/screens/data_screen.dart:107:27 • undefined_class
+  error • Undefined class 'IconData' • lib/features/data/screens/data_screen.dart:107:63 • undefined_class
+  error • Undefined class 'VoidCallback' • lib/features/data/screens/data_screen.dart:107:78 • undefined_class
+  error • The method 'Padding' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:108:12 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/data/screens/data_screen.dart:109:22 • undefined_identifier
+  error • The method 'InkWell' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:110:14 • undefined_method
+  error • Undefined name 'BorderRadius' • lib/features/data/screens/data_screen.dart:112:23 • undefined_identifier
+  error • The method 'Container' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:113:16 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/data/screens/data_screen.dart:114:26 • undefined_identifier
+  error • The method 'BoxDecoration' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:115:23 • undefined_method
+  error • Undefined name 'Border' • lib/features/data/screens/data_screen.dart:116:21 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/data/screens/data_screen.dart:116:55 • undefined_identifier
+  error • The name 'Color' isn't a class • lib/features/data/screens/data_screen.dart:116:91 • creation_with_non_type
+  error • Undefined name 'BorderRadius' • lib/features/data/screens/data_screen.dart:117:27 • undefined_identifier
+  error • The method 'Row' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:119:18 • undefined_method
+  error • The method 'Icon' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:121:15 • undefined_method
+  error • Undefined name 'Colors' • lib/features/data/screens/data_screen.dart:121:49 • undefined_identifier
+  error • Undefined name 'AppTheme' • lib/features/data/screens/data_screen.dart:121:62 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/data/screens/data_screen.dart:122:21 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:123:15 • undefined_method
+  error • The method 'TextStyle' isn't defined for the type 'DataScreen' • lib/features/data/screens/data_screen.dart:125:24 • undefined_method
+  error • Undefined name 'FontWeight' • lib/features/data/screens/data_screen.dart:126:31 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/data/screens/data_screen.dart:127:42 • undefined_identifier
+  error • Undefined name 'AppTheme' • lib/features/data/screens/data_screen.dart:127:55 • undefined_identifier
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/map/screens/map_screen.dart:17:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/map/screens/map_screen.dart:34:41 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/features/parcels/providers/location_repository.dart:30:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/parcels/providers/location_repository.dart:33:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/parcels/providers/location_repository.dart:47:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/parcels/providers/location_repository.dart:50:7 • avoid_print
+  error • Undefined name 'FormData' • lib/features/parcels/providers/parcel_form_provider.dart:225:24 • undefined_identifier
+  error • Undefined name 'MultipartFile' • lib/features/parcels/providers/parcel_form_provider.dart:226:23 • undefined_identifier
+   info • Don't invoke 'print' in production code • lib/features/parcels/providers/parcel_form_provider.dart:235:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/parcels/providers/parcel_form_provider.dart:292:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/parcels/providers/parcel_repository.dart:26:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/parcels/providers/parcel_repository.dart:29:7 • avoid_print
+warning • The value of 'refresh' should be used • lib/features/parcels/screens/new_parcel_screen.dart:73:21 • unused_result
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/features/parcels/screens/new_parcel_screen.dart:118:38 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/features/parcels/screens/new_parcel_screen.dart:121:30 • use_build_context_synchronously
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/screens/new_parcel_screen.dart:217:33 • deprecated_member_use
+warning • Dead code • lib/features/parcels/screens/parcel_detail_screen.dart:32:70 • dead_code
+warning • The left operand can't be null, so the right operand is never executed • lib/features/parcels/screens/parcel_detail_screen.dart:32:73 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/features/parcels/screens/parcel_detail_screen.dart:33:76 • dead_null_aware_expression
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/screens/parcel_detail_screen.dart:100:28 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/screens/parcel_detail_screen.dart:102:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/screens/parcel_detail_screen.dart:148:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/screens/parcels_screen.dart:44:67 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/screens/parcels_screen.dart:78:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/screens/parcels_screen.dart:113:36 • deprecated_member_use
+  error • Expected to find ';' • lib/features/parcels/screens/parcels_screen.dart:127:7 • expected_token
+warning • Dead code • lib/features/parcels/screens/parcels_screen.dart:127:8 • dead_code
+  error • Expected an identifier • lib/features/parcels/screens/parcels_screen.dart:127:8 • missing_identifier
+  error • Expected to find ';' • lib/features/parcels/screens/parcels_screen.dart:127:8 • expected_token
+  error • Unexpected text ';' • lib/features/parcels/screens/parcels_screen.dart:127:8 • unexpected_token
+  error • Expected an identifier • lib/features/parcels/screens/parcels_screen.dart:128:5 • missing_identifier
+  error • Unexpected text ';' • lib/features/parcels/screens/parcels_screen.dart:128:5 • unexpected_token
+   info • Unnecessary empty statement • lib/features/parcels/screens/parcels_screen.dart:128:6 • empty_statements
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/widgets/step_details.dart:84:52 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/widgets/step_details.dart:116:41 • deprecated_member_use
+warning • Unused import: 'package:parcello_mobile/features/dashboard/providers/stats_repository.dart' • lib/features/parcels/widgets/step_location.dart:8:8 • unused_import
+warning • Unused import: 'package:parcello_mobile/core/api/api_client.dart' • lib/features/parcels/widgets/step_location.dart:9:8 • unused_import
+   info • Don't use 'BuildContext's across async gaps • lib/features/parcels/widgets/step_location.dart:35:28 • use_build_context_synchronously
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/widgets/step_location.dart:136:37 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/widgets/step_location.dart:138:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/widgets/step_location.dart:204:41 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/parcels/widgets/step_owner.dart:53:17 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/widgets/step_owner.dart:141:72 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/widgets/step_owner.dart:155:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/widgets/step_owner.dart:185:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/widgets/step_residents.dart:78:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/widgets/step_residents.dart:188:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/widgets/step_summary.dart:54:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/widgets/step_summary.dart:95:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/parcels/widgets/step_uploads.dart:164:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/reports/screens/reports_screen.dart:73:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/reports/screens/reports_screen.dart:84:28 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/settings/screens/settings_screen.dart:63:37 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/settings/screens/settings_screen.dart:65:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/settings/screens/settings_screen.dart:94:48 • deprecated_member_use
+warning • Unused import: 'features/auth/providers/auth_provider.dart' • lib/main.dart:10:8 • unused_import
+
+182 issues found. (ran in 2.2s)

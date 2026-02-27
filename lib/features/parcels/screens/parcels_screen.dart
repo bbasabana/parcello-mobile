@@ -123,8 +123,6 @@ class ParcelsScreen extends ConsumerWidget {
           ],
         ),
       ),
-        ),
-      ),
     );
   }
 }

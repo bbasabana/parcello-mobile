@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dio/dio.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:parcello_mobile/core/database/database_helper.dart';
 import 'package:parcello_mobile/core/api/api_client.dart';

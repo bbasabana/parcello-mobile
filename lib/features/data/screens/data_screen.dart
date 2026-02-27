@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:parcello_mobile/core/theme/app_theme.dart';
 import 'package:parcello_mobile/features/parcels/providers/parcel_form_provider.dart';
 
 class DataScreen extends ConsumerWidget {

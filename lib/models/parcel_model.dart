@@ -8,6 +8,8 @@ class ParcelModel {
   final int year;
   final String? ownerName;
   final int apartmentCount;
+  final String type;
+  final double surfaceArea;
   final DateTime createdAt;
 
   ParcelModel({
@@ -20,6 +22,8 @@ class ParcelModel {
     required this.year,
     this.ownerName,
     required this.apartmentCount,
+    required this.type,
+    required this.surfaceArea,
     required this.createdAt,
   });
 
@@ -34,6 +38,8 @@ class ParcelModel {
       year: json['year'] ?? 0,
       ownerName: json['owner']?['fullName'],
       apartmentCount: json['_count']?['apartments'] ?? 0,
+      type: json['type'] ?? 'RESIDENTIAL',
+      surfaceArea: (json['area'] ?? 0.0).toDouble(),
       createdAt: DateTime.parse(json['createdAt']),
     );
   }

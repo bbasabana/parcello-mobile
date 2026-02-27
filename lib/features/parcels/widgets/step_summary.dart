@@ -45,7 +45,7 @@ class StepSummary extends ConsumerWidget {
           _buildSection('Documents joints', [
             'Photo Parcelle: ${state.mapPhoto != null ? 'Oui' : 'Non'}',
             'Photo Propriétaire: ${state.parcelPhoto != null ? 'Oui' : 'Non'}',
-            'Pièce d\'identité: ${state.passportPhoto != null ? 'Oui' : 'Non'}',
+            'Pièce d\'identité: ${state.idCardPhoto != null ? 'Oui' : 'Non'}',
           ]),
           const SizedBox(height: 40),
           Container(

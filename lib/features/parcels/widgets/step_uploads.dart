@@ -75,17 +75,17 @@ class _StepUploadsState extends ConsumerState<StepUploads> {
             LucideIcons.camera,
           ),
           const SizedBox(height: 32),
-          _buildUploadSection('Photo de la Parcelle', LucideIcons.building2, 'mapPhoto', state.mapPhoto),
+          _buildUploadSection('Photo de la Parcelle', LucideIcons.building2, 'mapPhoto', state.mapPhoto, state),
           const SizedBox(height: 24),
-          _buildUploadSection('Photo du Propriétaire', LucideIcons.userCircle, 'parcelPhoto', state.parcelPhoto),
+          _buildUploadSection('Photo du Propriétaire', LucideIcons.userCircle, 'parcelPhoto', state.parcelPhoto, state),
           const SizedBox(height: 24),
-          _buildUploadSection('Pièce d\'identité', LucideIcons.fileText, 'idCardPhoto', state.idCardPhoto),
+          _buildUploadSection('Pièce d\'identité', LucideIcons.fileText, 'idCardPhoto', state.idCardPhoto, state),
         ],
       ),
     );
   }
 
-  Widget _buildUploadSection(String label, IconData icon, String type, String? imagePath) {
+  Widget _buildUploadSection(String label, IconData icon, String type, String? imagePath, ParcelFormState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

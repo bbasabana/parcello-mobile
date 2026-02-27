@@ -111,7 +111,7 @@ class StepOwner extends ConsumerWidget {
         height: 160,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.slate[50],
+          color: const Color(0xFFF8FAFC),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: const Color(0xFFE2E8F0), style: BorderStyle.solid),
         ),

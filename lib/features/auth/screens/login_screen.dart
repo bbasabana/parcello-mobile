@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:parcello_mobile/core/theme/app_theme.dart';
 import 'package:parcello_mobile/features/auth/providers/auth_provider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'totp_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -24,6 +25,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
+      final connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult.every((result) => result == ConnectivityResult.none)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Pas de connexion internet. Veuillez vérifier votre réseau.'),
+            backgroundColor: AppTheme.errorRed,
+          ),
+        );
+        return;
+      }
       await ref.read(authStateProvider.notifier).login(_emailController.text.trim());
     }
   }

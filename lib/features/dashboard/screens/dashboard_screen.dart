@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:parcello_mobile/core/theme/app_theme.dart';
 import 'package:parcello_mobile/features/auth/providers/auth_provider.dart';
@@ -73,7 +74,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     _buildRecentParcelsList(stats.recentParcels),
                   ],
                 ),
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => _buildDashboardSkeleton(),
                 error: (err, _) => Center(child: Text('Erreur: $err')),
               ),
             ],
@@ -314,6 +315,48 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
       selected: isSelected,
       onTap: onTap ?? () {},
+    );
+  }
+
+  Widget _buildDashboardSkeleton() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 2,
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 16,
+          childAspectRatio: 1.1,
+          children: List.generate(4, (index) => _buildShimmerBox(height: 100, radius: 12)),
+        ),
+        const SizedBox(height: 32),
+        _buildShimmerBox(width: 150, height: 24, radius: 4),
+        const SizedBox(height: 16),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: 3,
+          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          itemBuilder: (_, __) => _buildShimmerBox(height: 80, radius: 12),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildShimmerBox({double? width, double? height, double radius = 8}) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(radius),
+        ),
+      ),
     );
   }
 }

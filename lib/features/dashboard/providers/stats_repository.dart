@@ -2,10 +2,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
 import 'package:parcello_mobile/core/api/api_client.dart';
 import 'package:parcello_mobile/models/stats_model.dart';
+import 'package:parcello_mobile/features/auth/providers/auth_provider.dart';
 
 final statsRepositoryProvider = Provider((ref) => StatsRepository(ref.read(apiClientProvider)));
 
 final statsProvider = FutureProvider<DashboardStats>((ref) async {
+  // Watch auth state to re-fetch when user changes
+  final authState = ref.watch(authStateProvider);
+  if (authState.user == null) return DashboardStats.empty();
+  
   return ref.read(statsRepositoryProvider).getStats();
 });
 

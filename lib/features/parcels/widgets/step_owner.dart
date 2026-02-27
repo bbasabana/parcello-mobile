@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import '../../../core/theme/app_theme.dart';
 import '../providers/parcel_form_provider.dart';
 
@@ -82,9 +84,65 @@ class StepOwner extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           _buildTextField('N° de la pièce', ref, 'idCardNumber'),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
+          if (state.ownerData['idCardType'] != null) ...[
+            const Text('Document d\'identité', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.textLight)),
+            const SizedBox(height: 12),
+            _buildImagePicker(ref, state.idCardPhoto),
+          ],
+          const SizedBox(height: 24),
           _buildTextField('Profession', ref, 'profession'),
         ],
+      ),
+    );
+  }
+
+  Widget _buildImagePicker(WidgetRef ref, String? imagePath) {
+    return InkWell(
+      onTap: () async {
+        final picker = ImagePicker();
+        final image = await picker.pickImage(source: ImageSource.camera);
+        if (image != null) {
+          ref.read(parcelFormProvider.notifier).addPhoto('idCardPhoto', image.path);
+        }
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        height: 160,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.slate[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFE2E8F0), style: BorderStyle.solid),
+        ),
+        child: imagePath != null
+            ? Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.file(File(imagePath), width: double.infinity, height: 160, fit: BoxFit.cover),
+                  ),
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.black54,
+                      child: IconButton(
+                        icon: const Icon(LucideIcons.refreshCw, color: Colors.white, size: 18),
+                        onPressed: () {}, // Handled by InkWell onTap
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(LucideIcons.camera, color: AppTheme.primaryBlue.withOpacity(0.5), size: 32),
+                  const SizedBox(height: 12),
+                  const Text('Prendre en photo la pièce', style: TextStyle(color: AppTheme.textLight, fontSize: 13)),
+                ],
+              ),
       ),
     );
   }

@@ -79,7 +79,7 @@ class _StepUploadsState extends ConsumerState<StepUploads> {
           const SizedBox(height: 24),
           _buildUploadSection('Photo du Propriétaire', LucideIcons.userCircle, 'parcelPhoto', state.parcelPhoto),
           const SizedBox(height: 24),
-          _buildUploadSection('Pièce d\'identité', LucideIcons.fileText, 'passportPhoto', state.passportPhoto),
+          _buildUploadSection('Pièce d\'identité', LucideIcons.fileText, 'idCardPhoto', state.idCardPhoto),
         ],
       ),
     );
@@ -112,7 +112,14 @@ class _StepUploadsState extends ConsumerState<StepUploads> {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        Image.file(File(imagePath), fit: BoxFit.cover),
+                        imagePath.startsWith('http') 
+                          ? Image.network(imagePath, fit: BoxFit.cover)
+                          : Image.file(File(imagePath), fit: BoxFit.cover),
+                        if (state.uploadingPhotos[type] == true)
+                          Container(
+                            color: Colors.black26,
+                            child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+                          ),
                         Positioned(
                           right: 8,
                           top: 8,
@@ -122,7 +129,11 @@ class _StepUploadsState extends ConsumerState<StepUploads> {
                               color: Colors.black54,
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(LucideIcons.edit2, color: Colors.white, size: 16),
+                            child: Icon(
+                              state.uploadingPhotos[type] == true ? LucideIcons.loader2 : LucideIcons.edit2, 
+                              color: Colors.white, 
+                              size: 16
+                            ),
                           ),
                         ),
                       ],

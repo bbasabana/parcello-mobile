@@ -36,11 +36,11 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<int> insertParcel(Map<String, dynamic> parcelData) async {
+  Future<int> insertParcel(Map<String, dynamic> parcelData, {String status = 'pending'}) async {
     final db = await database;
     return await db.insert('offline_parcels', {
       'data': jsonEncode(parcelData),
-      'status': 'pending',
+      'status': status,
       'createdAt': DateTime.now().toIso8601String(),
     });
   }
@@ -48,6 +48,11 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getPendingParcels() async {
     final db = await database;
     return await db.query('offline_parcels', where: 'status = ?', whereArgs: ['pending']);
+  }
+
+  Future<List<Map<String, dynamic>>> getDrafts() async {
+    final db = await database;
+    return await db.query('offline_parcels', where: 'status = ?', whereArgs: ['draft']);
   }
 
   Future<int> updateParcelStatus(int id, String status) async {

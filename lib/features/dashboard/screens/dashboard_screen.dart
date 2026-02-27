@@ -126,7 +126,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         _buildStatCard('Parcelles', stats.totalParcels.toString(), LucideIcons.building2, Colors.blue),
         _buildStatCard('Propriétaires', stats.totalOwners.toString(), LucideIcons.user, Colors.orange),
         _buildStatCard('Résidents', stats.totalResidents.toString(), LucideIcons.users, Colors.green),
-        _buildStatCard('Recensement', '85%', LucideIcons.barChart3, Colors.purple),
+        _buildStatCard('Recensement', '${stats.censusPercentage}%', LucideIcons.barChart3, Colors.purple),
       ],
     );
   }

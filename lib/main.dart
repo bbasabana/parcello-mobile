@@ -5,11 +5,14 @@ import 'core/constants/app_constants.dart';
 import 'core/api/api_client.dart';
 import 'features/auth/screens/login_screen.dart';
 
+import 'core/services/connectivity_service.dart';
 import 'core/services/sync_service.dart';
 import 'features/auth/providers/auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  ConnectivityService().init();
   
   final container = ProviderContainer();
 

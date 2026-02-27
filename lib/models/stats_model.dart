@@ -2,12 +2,14 @@ class DashboardStats {
   final int totalParcels;
   final int totalOwners;
   final int totalResidents;
+  final int censusPercentage;
   final List<dynamic> recentParcels;
 
   DashboardStats({
     required this.totalParcels,
     required this.totalOwners,
     required this.totalResidents,
+    required this.censusPercentage,
     required this.recentParcels,
   });
 
@@ -16,6 +18,7 @@ class DashboardStats {
       totalParcels: json['totalParcels'] ?? 0,
       totalOwners: json['totalOwners'] ?? 0,
       totalResidents: json['totalResidents'] ?? 0,
+      censusPercentage: json['censusPercentage'] ?? 0,
       recentParcels: json['recentParcels'] ?? [],
     );
   }
@@ -25,6 +28,7 @@ class DashboardStats {
       totalParcels: 0, 
       totalOwners: 0, 
       totalResidents: 0, 
+      censusPercentage: 0,
       recentParcels: []
     );
   }

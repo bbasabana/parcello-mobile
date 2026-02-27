@@ -5,6 +5,7 @@ import 'package:parcello_mobile/core/theme/app_theme.dart';
 import 'package:parcello_mobile/features/parcels/providers/parcel_repository.dart';
 import 'package:parcello_mobile/models/parcel_model.dart';
 import 'package:intl/intl.dart';
+import 'parcel_detail_screen.dart';
 
 class ParcelsScreen extends ConsumerWidget {
   const ParcelsScreen({super.key});
@@ -61,8 +62,15 @@ class ParcelsScreen extends ConsumerWidget {
       statusLabel = 'Rejeté';
     }
 
-    return Card(
-      child: ListTile(
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ParcelDetailScreen(parcel: parcel),
+        ),
+      ),
+      child: Card(
+        child: ListTile(
         contentPadding: const EdgeInsets.all(16),
         leading: Container(
           padding: const EdgeInsets.all(8),

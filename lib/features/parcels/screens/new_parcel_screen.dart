@@ -110,6 +110,23 @@ class _NewParcelScreenState extends ConsumerState<NewParcelScreen> {
           icon: Icon(LucideIcons.x),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        actions: [
+          TextButton.icon(
+            onPressed: formState.isSubmitting ? null : () async {
+              final success = await ref.read(parcelFormProvider.notifier).saveAsDraft();
+              if (success && mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Brouillon sauvegardé')),
+                );
+                Navigator.of(context).pop();
+              }
+            },
+            icon: const Icon(LucideIcons.save, size: 18),
+            label: const Text('Brouillon'),
+            style: TextButton.styleFrom(foregroundColor: AppTheme.primaryBlue),
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Column(
         children: [

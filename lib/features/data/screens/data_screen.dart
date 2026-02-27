@@ -1,12 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
-import 'package:parcello_mobile/core/theme/app_theme.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:parcello_mobile/features/parcels/providers/parcel_form_provider.dart';
 
-class DataScreen extends StatelessWidget {
+class DataScreen extends ConsumerWidget {
   const DataScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final draftsAsync = ref.watch(draftParcelsProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('MAPA Data'),
@@ -21,16 +22,25 @@ class DataScreen extends StatelessWidget {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
+          draftsAsync.when(
+            data: (drafts) => _buildDataItem('Brouillons enregistrés', '${drafts.length}', LucideIcons.fileSpreadsheet, Colors.orange),
+            loading: () => _buildDataItem('Brouillons enregistrés', '...', LucideIcons.fileSpreadsheet, Colors.orange),
+            error: (_, __) => _buildDataItem('Brouillons enregistrés', 'Erreur', LucideIcons.fileSpreadsheet, Colors.red),
+          ),
           _buildDataItem('Fiches en attente', '0', LucideIcons.uploadCloud, Colors.blue),
           _buildDataItem('Fiches synchronisées', '12', LucideIcons.checkCircle2, Colors.green),
-          _buildDataItem('Dernier cache', 'Il y a 5 min', LucideIcons.database, Colors.orange),
           const SizedBox(height: 24),
           const Text(
             'Actions',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          _buildActionItem(context, 'Forcer la synchronisation', LucideIcons.refreshCw, () {}),
+          _buildActionItem(context, 'Forcer la synchronisation', LucideIcons.refreshCw, () async {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Synchronisation en cours...')));
+          }),
+          _buildActionItem(context, 'Synchroniser les brouillons', LucideIcons.send, () async {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Synchronisation des brouillons...')));
+          }),
           _buildActionItem(context, 'Vider le cache local', LucideIcons.trash2, () {}, isDestructive: true),
         ],
       ),
@@ -53,7 +63,7 @@ class DataScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(LucideIcons.cloudCheck, color: Colors.white, size: 28),
+              Icon(LucideIcons.checkCircle2, color: Colors.white, size: 28),
               SizedBox(width: 12),
               Text(
                 'Système Synchronisé',
@@ -85,7 +95,7 @@ class DataScreen extends StatelessWidget {
           children: [
             Icon(icon, color: color, size: 20),
             const SizedBox(width: 16),
-            Text(label, style: const TextStyle(fontWeight: FontWeight.medium)),
+            Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
             const Spacer(),
             Text(value, style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
           ],

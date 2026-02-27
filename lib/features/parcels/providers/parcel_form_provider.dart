@@ -63,8 +63,9 @@ class ParcelFormState {
   final List<Apartment> apartments;
   final String? mapPhoto;
   final String? parcelPhoto;
-  final String? passportPhoto;
+  final String? idCardPhoto;
   final bool isSubmitting;
+  final Map<String, bool> uploadingPhotos;
   final String? error;
 
   ParcelFormState({
@@ -81,8 +82,9 @@ class ParcelFormState {
     this.apartments = const [],
     this.mapPhoto,
     this.parcelPhoto,
-    this.passportPhoto,
+    this.idCardPhoto,
     this.isSubmitting = false,
+    this.uploadingPhotos = const {},
     this.error,
   });
 
@@ -100,8 +102,9 @@ class ParcelFormState {
     List<Apartment>? apartments,
     String? mapPhoto,
     String? parcelPhoto,
-    String? passportPhoto,
+    String? idCardPhoto,
     bool? isSubmitting,
+    Map<String, bool>? uploadingPhotos,
     String? error,
   }) {
     return ParcelFormState(
@@ -118,8 +121,9 @@ class ParcelFormState {
       apartments: apartments ?? this.apartments,
       mapPhoto: mapPhoto ?? this.mapPhoto,
       parcelPhoto: parcelPhoto ?? this.parcelPhoto,
-      passportPhoto: passportPhoto ?? this.passportPhoto,
+      idCardPhoto: idCardPhoto ?? this.idCardPhoto,
       isSubmitting: isSubmitting ?? this.isSubmitting,
+      uploadingPhotos: uploadingPhotos ?? this.uploadingPhotos,
       error: error ?? this.error,
     );
   }
@@ -137,7 +141,7 @@ class ParcelFormState {
     'apartments': apartments.map((a) => a.toJson()).toList(),
     'mapPhoto': mapPhoto,
     'parcelPhoto': parcelPhoto,
-    'passportPhoto': passportPhoto,
+    'idCardPhoto': idCardPhoto,
   };
 }
 
@@ -215,13 +219,60 @@ class ParcelFormNotifier extends StateNotifier<ParcelFormState> {
     state = state.copyWith(apartments: apartments);
   }
 
-  void addPhoto(String type, String path) {
+  Future<String?> _uploadPhoto(String path) async {
+    try {
+      final apiClient = _ref.read(apiClientProvider);
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(path),
+        'parcelId': 'new_parcel', // Could be more specific if editing existing
+      });
+
+      final response = await apiClient.dio.post('/upload', data: formData);
+      if (response.data['success'] == true) {
+        return response.data['url'] as String;
+      }
+    } catch (e) {
+      print('Upload error: $e');
+    }
+    return null;
+  }
+
+  void addPhoto(String type, String path) async {
+    // 1. Set local path immediately for UI feedback and set uploading status
+    final uploading = Map<String, bool>.from(state.uploadingPhotos);
+    uploading[type] = true;
+
     if (type == 'mapPhoto') {
-      state = state.copyWith(mapPhoto: path);
+      state = state.copyWith(mapPhoto: path, uploadingPhotos: uploading);
     } else if (type == 'parcelPhoto') {
-      state = state.copyWith(parcelPhoto: path);
-    } else if (type == 'passportPhoto') {
-      state = state.copyWith(passportPhoto: path);
+      state = state.copyWith(parcelPhoto: path, uploadingPhotos: uploading);
+    } else if (type == 'idCardPhoto') {
+      state = state.copyWith(idCardPhoto: path, uploadingPhotos: uploading);
+    }
+
+    // 2. Try to upload if online
+    final results = await Connectivity().checkConnectivity();
+    if (results.any((r) => r != ConnectivityResult.none)) {
+      final url = await _uploadPhoto(path);
+      
+      final updatedUploading = Map<String, bool>.from(state.uploadingPhotos);
+      updatedUploading[type] = false;
+
+      if (url != null) {
+        if (type == 'mapPhoto') {
+          state = state.copyWith(mapPhoto: url, uploadingPhotos: updatedUploading);
+        } else if (type == 'parcelPhoto') {
+          state = state.copyWith(parcelPhoto: url, uploadingPhotos: updatedUploading);
+        } else if (type == 'idCardPhoto') {
+          state = state.copyWith(idCardPhoto: url, uploadingPhotos: updatedUploading);
+        }
+      } else {
+        state = state.copyWith(uploadingPhotos: updatedUploading);
+      }
+    } else {
+      final updatedUploading = Map<String, bool>.from(state.uploadingPhotos);
+      updatedUploading[type] = false;
+      state = state.copyWith(uploadingPhotos: updatedUploading);
     }
   }
 
@@ -243,13 +294,25 @@ class ParcelFormNotifier extends StateNotifier<ParcelFormState> {
       }
     }
 
-    // Offline save
+    // Offline save as pending sync
     try {
-      await DatabaseHelper().insertParcel(state.toJson());
+      await DatabaseHelper().insertParcel(state.toJson(), status: 'pending');
       state = state.copyWith(isSubmitting: false, error: 'Enregistré localement (hors-ligne)');
       return true;
     } catch (e) {
       state = state.copyWith(isSubmitting: false, error: 'Erreur d\'enregistrement: $e');
+      return false;
+    }
+  }
+
+  Future<bool> saveAsDraft() async {
+    state = state.copyWith(isSubmitting: true, error: null);
+    try {
+      await DatabaseHelper().insertParcel(state.toJson(), status: 'draft');
+      state = state.copyWith(isSubmitting: false, error: 'Brouillon sauvegardé avec succès');
+      return true;
+    } catch (e) {
+      state = state.copyWith(isSubmitting: false, error: 'Erreur sauvegarde brouillon: $e');
       return false;
     }
   }
@@ -260,4 +323,8 @@ class ParcelFormNotifier extends StateNotifier<ParcelFormState> {
 
 final parcelFormProvider = StateNotifierProvider<ParcelFormNotifier, ParcelFormState>((ref) {
   return ParcelFormNotifier(ref);
+});
+
+final draftParcelsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  return await DatabaseHelper().getDrafts();
 });

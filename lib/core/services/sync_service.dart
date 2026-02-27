@@ -1,5 +1,5 @@
-import 'dart:async';
-import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../database/database_helper.dart';
 import '../api/api_client.dart';
@@ -37,10 +37,12 @@ class SyncService {
     if (results.every((result) => result == ConnectivityResult.none)) return;
 
     _isSyncing = true;
-    print('Starting background sync...');
 
     try {
       final pending = await _dbHelper.getPendingParcels();
+      if (pending.isEmpty) return;
+
+      int successCount = 0;
       for (var item in pending) {
         final id = item['id'];
         final data = jsonDecode(item['data']);
@@ -48,15 +50,39 @@ class SyncService {
         try {
           await _apiClient.dio.post('/parcels', data: data);
           await _dbHelper.updateParcelStatus(id, 'synced');
-          print('Successfully synced parcel ID: $id');
+          successCount++;
         } catch (e) {
           print('Failed to sync parcel ID $id: $e');
         }
+      }
+
+      if (successCount > 0) {
+        Fluttertoast.showToast(
+          msg: "$successCount fiches synchronisées automatiquement !",
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          gravity: ToastGravity.TOP,
+        );
       }
     } catch (e) {
       print('Sync Error: $e');
     } finally {
       _isSyncing = false;
+    }
+  }
+
+  Future<void> syncDrafts() async {
+    // This allows manual sync of drafts as well
+    final drafts = await _dbHelper.getDrafts();
+    for (var item in drafts) {
+      final id = item['id'];
+      final data = jsonDecode(item['data']);
+      try {
+        await _apiClient.dio.post('/parcels', data: data);
+        await _dbHelper.updateParcelStatus(id, 'synced');
+      } catch (e) {
+        print('Failed to sync draft ID $id: $e');
+      }
     }
   }
 }
